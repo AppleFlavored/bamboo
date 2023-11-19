@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: 'Publish to Maven Central'
+    
     steps:
     - uses: actions/checkout@v3
     
