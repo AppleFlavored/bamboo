@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.20"
     `maven-publish`
+    signing
 }
 
 group = "dev.flavored"
@@ -22,7 +23,7 @@ kotlin {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("mavenJava") {
             from(components["java"])
         }
     }
@@ -30,11 +31,15 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")
             }
         }
     }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
 }
