@@ -5,7 +5,7 @@ import net.minestom.server.instance.Instance
 import net.minestom.server.instance.batch.AbsoluteBlockBatch
 import net.minestom.server.instance.block.Block
 
-data class Schematic(
+data class Schematic internal constructor(
     val width: Short,
     val height: Short,
     val length: Short,

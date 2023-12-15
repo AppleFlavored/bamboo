@@ -7,7 +7,7 @@ import org.jglrxavpok.hephaistos.nbt.NBTException
 import org.jglrxavpok.hephaistos.nbt.NBTReader
 import java.io.InputStream
 
-class SchematicReader(stream: InputStream, private val options: SchematicOptions) {
+internal class SchematicReader(stream: InputStream, private val options: SchematicOptions) {
     private val reader = NBTReader(stream)
 
     private var width: Short = 0
