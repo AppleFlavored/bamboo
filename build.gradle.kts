@@ -17,6 +17,11 @@ dependencies {
     testImplementation("dev.hollowcube:minestom-ce:438338381e")
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 kotlin {
     jvmToolchain(17)
 }
@@ -25,6 +30,33 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
+
+            pom {
+                name = "bamboo"
+                url = "https://github.com/AppleFlavored/bamboo"
+                description = "A fast and lightweight schematic library for Minestom."
+
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://opensource.org/license/mit/"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "AppleFlavored"
+                        name = "AppleFlavored"
+                        url = "https://github.com/AppleFlavored"
+                    }
+                }
+
+                scm {
+                    connection = "scm:git:git://github.com/AppleFlavored/bamboo.git"
+                    developerConnection = "scm:git:ssh://github.com:AppleFlavored/bamboo.git"
+                    url = "https://github.com/AppleFlavored/bamboo"
+                }
+            }
         }
     }
 
