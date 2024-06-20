@@ -2,7 +2,7 @@
 Bamboo is a fast and lightweight schematic library for Minestom.
 
 ## Install
-Bamboo is available on [Maven Central](https://central.sonatype.com/artifact/dev.flavored/bamboo)
+Bamboo is available on [Maven Central](https://central.sonatype.com/artifact/dev.flavored/bamboo).
 
 ```kts
 dependencies {

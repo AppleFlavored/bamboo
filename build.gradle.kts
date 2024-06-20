@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.20"
+    `java-library`
     `maven-publish`
     signing
 }
@@ -9,12 +10,10 @@ version = "0.1.0"
 
 repositories {
     mavenCentral()
-    maven(url = "https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("com.github.Minestom:Minestom:c496ee357")
-    testImplementation("dev.hollowcube:minestom-ce:438338381e")
+    compileOnly("net.minestom:minestom-snapshots:f1d5940855")
 }
 
 java {
@@ -23,7 +22,7 @@ java {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 publishing {
