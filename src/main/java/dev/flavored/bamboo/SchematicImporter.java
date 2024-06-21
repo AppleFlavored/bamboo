@@ -17,7 +17,6 @@ public class SchematicImporter {
     public Schematic fromStream(InputStream stream) throws IOException {
         CompoundBinaryTag root = BinaryTagIO.unlimitedReader().read(stream, BinaryTagIO.Compression.GZIP);
         Schematic.Builder builder = Schematic.builder();
-        System.out.println(root);
 
         // TODO: Add check for required keys.
         builder.width(root.getShort("Width"));
@@ -47,15 +46,28 @@ public class SchematicImporter {
     private List<Block> readBlockData(CompoundBinaryTag palette, byte[] blockData) {
         Map<Integer, Block> indexToBlockMap = new HashMap<>(palette.size());
         for (String key : palette.keySet()) {
-            int value = palette.getInt(key);
-            indexToBlockMap.put(value, Block.fromNamespaceId(key));
+            int propertyListStart = key.indexOf('[');
+            if (propertyListStart < 0) {
+                indexToBlockMap.put(palette.getInt(key), Block.fromNamespaceId(key));
+                continue;
+            }
+
+            int propertyListEnd = key.indexOf(']');
+            String[] pairs = key.substring(propertyListStart + 1, propertyListEnd).split(",");
+            Map<String, String> properties = new HashMap<>();
+            for (String pair : pairs) {
+                int equalsIndex = pair.indexOf('=');
+                properties.put(pair.substring(0, equalsIndex), pair.substring(equalsIndex + 1));
+            }
+
+            Block block = Objects.requireNonNull(Block.fromNamespaceId(key.substring(0, propertyListStart)));
+            indexToBlockMap.put(palette.getInt(key), block.withProperties(properties));
         }
 
         ArrayList<Block> blocks = new ArrayList<>();
         VarIntIterator iterator = new VarIntIterator(blockData);
         while (iterator.hasNext()) {
             int index = iterator.nextInt();
-            // TODO: Block states?
             Block block = indexToBlockMap.get(index);
             blocks.add(block);
         }

@@ -2,6 +2,8 @@ package com.example;
 
 import dev.flavored.bamboo.Schematic;
 import dev.flavored.bamboo.SchematicImporter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -33,9 +35,13 @@ public class TestServer {
         instance.loadChunk(0, 0);
 
         SchematicImporter importer = new SchematicImporter();
+        long time = 0;
+
         try {
-            Schematic schematic = importer.fromStream(Files.newInputStream(Path.of("test.schematic")));
+            long start = System.currentTimeMillis();
+            Schematic schematic = importer.fromStream(Files.newInputStream(Path.of("ship.schem")));
             schematic.paste(instance, Vec.ZERO);
+            time = System.currentTimeMillis() - start;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,9 +50,12 @@ public class TestServer {
             event.setSpawningInstance(instance);
         });
 
+        long finalTime = time;
         eventHandler.addListener(PlayerSpawnEvent.class, event -> {
             event.getPlayer().setGameMode(GameMode.SPECTATOR);
             event.getPlayer().teleport(new Pos(0, 4, 0));
+
+            event.getPlayer().sendMessage(Component.text("Loaded schematic in ",  NamedTextColor.DARK_AQUA).append(Component.text(finalTime, NamedTextColor.AQUA).append(Component.text("ms", NamedTextColor.DARK_AQUA))));
         });
 
         server.start("0.0.0.0", 25565);
