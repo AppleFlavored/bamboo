@@ -28,10 +28,18 @@ public class SchematicImporter {
     public Schematic fromNBT(CompoundBinaryTag root) throws IOException {
         Schematic.Builder builder = Schematic.builder();
 
-        // TODO: Add check for required keys.
-        builder.width(root.getShort("Width"));
-        builder.height(root.getShort("Height"));
-        builder.length(root.getShort("Length"));
+        short width = root.getShort("Width");
+        short height = root.getShort("Height");
+        short length = root.getShort("Length");
+
+        if (width < 0) throw new IOException("Schematic is missing a width value");
+        builder.width(width);
+
+        if (height < 0) throw new IOException("Schematic is missing a height value");
+        builder.height(height);
+
+        if (length < 0) throw new IOException("Schematic is missing a length value");
+        builder.length(length);
 
         CompoundBinaryTag metadataCompound = root.getCompound("Metadata");
         if (metadataCompound.size() > 0) {
