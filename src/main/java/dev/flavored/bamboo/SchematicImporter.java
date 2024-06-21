@@ -7,6 +7,8 @@ import net.minestom.server.instance.block.Block;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class SchematicImporter {
@@ -14,8 +16,16 @@ public class SchematicImporter {
     public SchematicImporter() {
     }
 
+    public Schematic fromPath(Path path) throws IOException {
+        return fromStream(Files.newInputStream(path));
+    }
+
     public Schematic fromStream(InputStream stream) throws IOException {
         CompoundBinaryTag root = BinaryTagIO.unlimitedReader().read(stream, BinaryTagIO.Compression.GZIP);
+        return fromNBT(root);
+    }
+
+    public Schematic fromNBT(CompoundBinaryTag root) throws IOException {
         Schematic.Builder builder = Schematic.builder();
 
         // TODO: Add check for required keys.
