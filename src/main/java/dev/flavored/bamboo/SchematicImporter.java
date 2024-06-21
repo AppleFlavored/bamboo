@@ -15,7 +15,7 @@ public class SchematicImporter {
     }
 
     public Schematic fromStream(InputStream stream) throws IOException {
-        CompoundBinaryTag root = BinaryTagIO.reader().read(stream, BinaryTagIO.Compression.GZIP);
+        CompoundBinaryTag root = BinaryTagIO.unlimitedReader().read(stream, BinaryTagIO.Compression.GZIP);
         Schematic.Builder builder = Schematic.builder();
         System.out.println(root);
 
