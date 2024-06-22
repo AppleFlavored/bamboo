@@ -14,7 +14,7 @@ dependencies {
 The following example loads a schematic from a file, then pastes it into the `instance` at a given position.
 ```java
 SchematicImporter importer = new SchematicImporter();
-Schematic schematic = Bamboo.fromPath(new java.nio.Path("example.schematic"));
+Schematic schematic = importer.fromPath(new java.nio.Path("example.schematic"));
 schematic.paste(instance, new Pos(0.0, 0.0, 0.0));
 ```
 
