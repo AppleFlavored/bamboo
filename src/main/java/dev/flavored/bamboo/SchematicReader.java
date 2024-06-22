@@ -11,9 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class SchematicImporter {
+public class SchematicReader {
 
-    public SchematicImporter() {
+    public SchematicReader() {
     }
 
     public Schematic fromPath(Path path) throws IOException {

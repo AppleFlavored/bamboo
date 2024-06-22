@@ -13,7 +13,7 @@ dependencies {
 ## Example
 The following example loads a schematic from a file, then pastes it into the `instance` at a given position.
 ```java
-SchematicImporter importer = new SchematicImporter();
+SchematicReader importer = new SchematicReader();
 Schematic schematic = importer.fromPath(new java.nio.Path("example.schematic"));
 schematic.paste(instance, new Pos(0.0, 0.0, 0.0));
 ```

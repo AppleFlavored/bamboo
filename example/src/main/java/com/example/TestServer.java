@@ -1,7 +1,7 @@
 package com.example;
 
 import dev.flavored.bamboo.Schematic;
-import dev.flavored.bamboo.SchematicImporter;
+import dev.flavored.bamboo.SchematicReader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
@@ -34,7 +34,7 @@ public class TestServer {
         InstanceContainer instance = instanceManager.createInstanceContainer(dimensionKey);
         instance.loadChunk(0, 0);
 
-        SchematicImporter importer = new SchematicImporter();
+        SchematicReader importer = new SchematicReader();
         long time = 0;
 
         try {
