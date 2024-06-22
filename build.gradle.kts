@@ -1,5 +1,4 @@
 plugins {
-    kotlin("jvm") version "1.9.20"
     `java-library`
     `maven-publish`
     signing
@@ -19,10 +18,6 @@ dependencies {
 java {
     withJavadocJar()
     withSourcesJar()
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 publishing {
