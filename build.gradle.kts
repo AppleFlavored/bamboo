@@ -72,5 +72,9 @@ nexusPublishing {
 }
 
 signing {
+    val privateKey = System.getenv("GPG_PRIVATE_KEY")
+    val passphrase = System.getenv("GPG_PASSWORD")
+    useInMemoryPgpKeys(privateKey, passphrase)
+
     sign(publishing.publications["mavenJava"])
 }
