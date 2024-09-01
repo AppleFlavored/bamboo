@@ -7,12 +7,29 @@ import net.minestom.server.instance.block.Block;
 
 import java.util.List;
 
+/**
+ * Represents a schematic.
+ * @param width The width of the schematic.
+ * @param height The height of the schematic.
+ * @param length The length of the schematic.
+ * @param offset The offset of the schematic.
+ * @param blocks The block data of the schematic.
+ */
 public record Schematic(short width, short height, short length, Point offset, List<Block> blocks) {
 
+    /**
+     * Creates a new {@link Builder} for {@link Schematic}.
+     * @return A new schematic builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Paste the schematic at the specified position in a given {@link Instance}.
+     * @param instance The instance where the schematic will be pasted.
+     * @param position The position where the schematic will be pasted.
+     */
     public void paste(Instance instance, Point position) {
         AbsoluteBlockBatch batch = new AbsoluteBlockBatch();
         for (int i = 0; i < blocks.size(); i++) {
@@ -28,6 +45,9 @@ public record Schematic(short width, short height, short length, Point offset, L
         batch.apply(instance, null);
     }
 
+    /**
+     * A builder for {@link Schematic}.
+     */
     public static class Builder {
         private short width;
         private short height;

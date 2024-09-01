@@ -11,20 +11,44 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+/**
+ * A {@link SchematicReader} reads a Sponge (v1) schematic.
+ */
 public class SchematicReader {
 
+    /**
+     * Initializes a new schematic reader.
+     */
     public SchematicReader() {
     }
 
+    /**
+     * Reads a schematic from the given {@link Path}.
+     * @param path The path to the schematic file.
+     * @return The schematic.
+     * @throws IOException If the schematic could not be read or is invalid.
+     */
     public Schematic fromPath(Path path) throws IOException {
         return fromStream(Files.newInputStream(path));
     }
 
+    /**
+     * Reads a schematic from the given {@link InputStream}.
+     * @param stream The input stream.
+     * @return The schematic.
+     * @throws IOException If the schematic could not be read or is invalid.
+     */
     public Schematic fromStream(InputStream stream) throws IOException {
         CompoundBinaryTag root = BinaryTagIO.unlimitedReader().read(stream, BinaryTagIO.Compression.GZIP);
         return fromNBT(root);
     }
 
+    /**
+     * Reads a schematic from the given {@link CompoundBinaryTag}.
+     * @param root The root tag.
+     * @return The schematic.
+     * @throws IOException If the schematic is invalid.
+     */
     public Schematic fromNBT(CompoundBinaryTag root) throws IOException {
         Schematic.Builder builder = Schematic.builder();
 
