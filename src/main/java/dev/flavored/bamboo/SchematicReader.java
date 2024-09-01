@@ -4,6 +4,7 @@ import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class SchematicReader {
      * @return The schematic.
      * @throws IOException If the schematic could not be read or is invalid.
      */
-    public Schematic fromPath(Path path) throws IOException {
+    public @NotNull Schematic fromPath(@NotNull Path path) throws IOException {
         return fromStream(Files.newInputStream(path));
     }
 
@@ -38,7 +39,7 @@ public class SchematicReader {
      * @return The schematic.
      * @throws IOException If the schematic could not be read or is invalid.
      */
-    public Schematic fromStream(InputStream stream) throws IOException {
+    public @NotNull Schematic fromStream(@NotNull InputStream stream) throws IOException {
         CompoundBinaryTag root = BinaryTagIO.unlimitedReader().read(stream, BinaryTagIO.Compression.GZIP);
         return fromNBT(root);
     }
@@ -49,7 +50,7 @@ public class SchematicReader {
      * @return The schematic.
      * @throws IOException If the schematic is invalid.
      */
-    public Schematic fromNBT(CompoundBinaryTag root) throws IOException {
+    public @NotNull Schematic fromNBT(@NotNull CompoundBinaryTag root) throws IOException {
         Schematic.Builder builder = Schematic.builder();
 
         short width = root.getShort("Width");
