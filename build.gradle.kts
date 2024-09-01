@@ -2,6 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
     signing
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "dev.flavored"
@@ -12,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.minestom:minestom-snapshots:f1d5940855")
+    compileOnly("net.minestom:minestom-snapshots:8f46913486")
 }
 
 java {
@@ -53,15 +54,19 @@ publishing {
             }
         }
     }
+}
 
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
-            }
+nexusPublishing {
+    useStaging = true
+    packageGroup = "dev.flavored"
+
+    repositories.sonatype {
+        nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+        snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+
+        if (System.getenv("SONATYPE_USERNAME") != null) {
+            username.set(System.getenv("SONATYPE_USERNAME"))
+            password.set(System.getenv("SONATYPE_PASSWORD"))
         }
     }
 }
