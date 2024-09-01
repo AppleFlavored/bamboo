@@ -1,7 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.9.20"
+    `java-library`
     `maven-publish`
     signing
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 group = "dev.flavored"
@@ -9,21 +10,15 @@ version = "0.1.0"
 
 repositories {
     mavenCentral()
-    maven(url = "https://jitpack.io")
 }
 
 dependencies {
-    compileOnly("com.github.Minestom:Minestom:c496ee357")
-    testImplementation("dev.hollowcube:minestom-ce:438338381e")
+    compileOnly("net.minestom:minestom-snapshots:8f46913486")
 }
 
 java {
     withJavadocJar()
     withSourcesJar()
-}
-
-kotlin {
-    jvmToolchain(17)
 }
 
 publishing {
@@ -59,19 +54,27 @@ publishing {
             }
         }
     }
+}
 
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
-            }
+nexusPublishing {
+    useStaging = true
+    packageGroup = "dev.flavored"
+
+    repositories.sonatype {
+        nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+        snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+
+        if (System.getenv("SONATYPE_USERNAME") != null) {
+            username.set(System.getenv("SONATYPE_USERNAME"))
+            password.set(System.getenv("SONATYPE_PASSWORD"))
         }
     }
 }
 
 signing {
+    val privateKey = System.getenv("GPG_PRIVATE_KEY")
+    val passphrase = System.getenv("GPG_PASSWORD")
+    useInMemoryPgpKeys(privateKey, passphrase)
+
     sign(publishing.publications["mavenJava"])
 }

@@ -8,3 +8,4 @@ out/
 # Local Minestom server
 extensions/
 *.schematic
+*.schem
