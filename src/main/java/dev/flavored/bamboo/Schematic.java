@@ -2,7 +2,7 @@ package dev.flavored.bamboo;
 
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.instance.batch.AbsoluteBlockBatch;
+import net.minestom.server.instance.batch.RelativeBlockBatch;
 import net.minestom.server.instance.block.Block;
 
 import java.util.List;
@@ -26,23 +26,36 @@ public record Schematic(short width, short height, short length, Point offset, L
     }
 
     /**
-     * Paste the schematic at the specified position in a given {@link Instance}.
+     * Paste the schematic (including air blocks) at the specified position in a given {@link Instance}.
+     * Use {@link #paste(Instance, Point, boolean)} if you want to ignore air blocks.
      * @param instance The instance where the schematic will be pasted.
      * @param position The position where the schematic will be pasted.
      */
     public void paste(Instance instance, Point position) {
-        AbsoluteBlockBatch batch = new AbsoluteBlockBatch();
+        paste(instance, position, false);
+    }
+
+    /**
+     * Paste the
+     * @param instance The instance where the schematic will be pasted.
+     * @param position The position where the schematic will be pasted.
+     * @param ignoreAir Whether to ignore air blocks or not. By default, this is false.
+     */
+    public void paste(Instance instance, Point position, boolean ignoreAir) {
+        RelativeBlockBatch batch = new RelativeBlockBatch();
         for (int i = 0; i < blocks.size(); i++) {
             final Block block = blocks.get(i);
+            if (ignoreAir && block.isAir()) {
+                continue;
+            }
+
             int y = i / (width * length);
             int z = i % (width * length) / width;
             int x = i % (width * length) % width;
-
-            Point absolutePos = position.add(x + offset.x(), y + offset.y(), z + offset.z());
-            // The chunk must be loaded before we can apply the patch.
-            instance.loadOptionalChunk(absolutePos).thenRun(() -> batch.setBlock(absolutePos, block));
+            batch.setBlock(x, y, z, block);
         }
-        batch.apply(instance, null);
+
+        batch.apply(instance, position.add(offset), () -> System.out.println("Pasted the schematic!"));
     }
 
     /**
