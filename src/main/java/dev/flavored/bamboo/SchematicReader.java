@@ -107,7 +107,7 @@ public class SchematicReader {
             indexToBlockMap.put(palette.getInt(key), block.withProperties(properties));
         }
 
-        ArrayList<Block> blocks = new ArrayList<>();
+        ArrayList<Block> blocks = new ArrayList<>(blockData.length);
         VarIntIterator iterator = new VarIntIterator(blockData);
         while (iterator.hasNext()) {
             int index = iterator.nextInt();
