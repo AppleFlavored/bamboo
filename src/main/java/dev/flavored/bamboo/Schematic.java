@@ -36,10 +36,10 @@ public record Schematic(short width, short height, short length, Point offset, L
     }
 
     /**
-     * Paste the
+     * Paste the schematic at the specified position in a given {@link Instance} with an option to ignore air blockData.
      * @param instance The instance where the schematic will be pasted.
      * @param position The position where the schematic will be pasted.
-     * @param ignoreAir Whether to ignore air blocks or not. By default, this is false.
+     * @param ignoreAir Whether to ignore air blockData or not. By default, this is false.
      */
     public void paste(Instance instance, Point position, boolean ignoreAir) {
         RelativeBlockBatch batch = new RelativeBlockBatch();
@@ -52,7 +52,9 @@ public record Schematic(short width, short height, short length, Point offset, L
             int y = i / (width * length);
             int z = i % (width * length) / width;
             int x = i % (width * length) % width;
-            batch.setBlock(x, y, z, block);
+            int chunkX = (position.blockX() + offset.blockX() + x) >> 4;
+            int chunkZ = (position.blockZ() + offset.blockZ() + z) >> 4;
+            instance.loadOptionalChunk(chunkX, chunkZ).thenRun(() -> batch.setBlock(x, y, z, block));
         }
 
         batch.apply(instance, position.add(offset), () -> System.out.println("Pasted the schematic!"));
