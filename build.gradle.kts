@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.minestom:minestom-snapshots:8f46913486")
+    compileOnly("net.minestom:minestom-snapshots:698af959c8")
 }
 
 java {

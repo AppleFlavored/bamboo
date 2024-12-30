@@ -57,7 +57,7 @@ public record Schematic(short width, short height, short length, Point offset, L
             instance.loadOptionalChunk(chunkX, chunkZ).thenRun(() -> batch.setBlock(x, y, z, block));
         }
 
-        batch.apply(instance, position.add(offset), () -> System.out.println("Pasted the schematic!"));
+        batch.apply(instance, position.add(offset), null);
     }
 
     /**

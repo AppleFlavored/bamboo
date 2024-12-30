@@ -17,7 +17,6 @@ import net.minestom.server.registry.DynamicRegistry;
 import net.minestom.server.world.DimensionType;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TestServer {
@@ -39,9 +38,10 @@ public class TestServer {
 
         try {
             long start = System.currentTimeMillis();
-            Schematic schematic = importer.fromStream(Files.newInputStream(Path.of("ship.schem")));
-            schematic.paste(instance, Vec.ZERO);
+            Schematic schematic = importer.fromPath(Path.of("new_spawn.schematic"));
+            schematic.paste(instance, Vec.ZERO, true);
             time = System.currentTimeMillis() - start;
+            System.out.println("Loaded schematic in " + time + "ms");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
