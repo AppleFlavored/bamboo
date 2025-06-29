@@ -6,14 +6,14 @@ plugins {
 }
 
 group = "dev.flavored"
-version = "1.1.1"
+version = "1.1.2"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly("net.minestom:minestom-snapshots:698af959c8")
+    compileOnly("net.minestom:minestom-snapshots:4fe2993057")
 }
 
 java {
