@@ -91,7 +91,7 @@ public class SchematicReader {
         for (String key : palette.keySet()) {
             int propertyListStart = key.indexOf('[');
             if (propertyListStart < 0) {
-                indexToBlockMap.put(palette.getInt(key), Block.fromNamespaceId(key));
+                indexToBlockMap.put(palette.getInt(key), Block.fromKey(key));
                 continue;
             }
 
@@ -103,7 +103,7 @@ public class SchematicReader {
                 properties.put(pair.substring(0, equalsIndex), pair.substring(equalsIndex + 1));
             }
 
-            Block block = Objects.requireNonNull(Block.fromNamespaceId(key.substring(0, propertyListStart)));
+            Block block = Objects.requireNonNull(Block.fromKey(key.substring(0, propertyListStart)));
             indexToBlockMap.put(palette.getInt(key), block.withProperties(properties));
         }
 
