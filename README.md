@@ -1,6 +1,13 @@
 # Bamboo
 Bamboo is a fast and lightweight schematic library for Minestom.
 
+| Format    | Reading            | Writing |
+|-----------|--------------------|---------|
+| Sponge V1 | :white_check_mark: | :x:     |
+| Sponge V2 | :warning:          | :x:     |
+| Sponge V3 | :x:                | :x:     |
+| MCEdit    | :x:                | :x:     |
+
 ## Install
 Bamboo is available on [Maven Central](https://central.sonatype.com/artifact/dev.flavored/bamboo). Replace `<VERSION>` with the latest version.
 

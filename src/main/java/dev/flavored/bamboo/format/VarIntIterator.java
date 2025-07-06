@@ -1,4 +1,4 @@
-package dev.flavored.bamboo;
+package dev.flavored.bamboo.format;
 
 import java.util.PrimitiveIterator;
 

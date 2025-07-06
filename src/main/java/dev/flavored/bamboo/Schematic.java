@@ -1,9 +1,11 @@
 package dev.flavored.bamboo;
 
 import net.minestom.server.coordinate.Point;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.batch.RelativeBlockBatch;
 import net.minestom.server.instance.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -12,10 +14,10 @@ import java.util.List;
  * @param width The width of the schematic.
  * @param height The height of the schematic.
  * @param length The length of the schematic.
- * @param offset The offset of the schematic.
+ * @param origin The origin of the schematic.
  * @param blocks The block data of the schematic.
  */
-public record Schematic(short width, short height, short length, Point offset, List<Block> blocks) {
+public record Schematic(int width, int height, int length, Point origin, List<Block> blocks) {
 
     /**
      * Creates a new {@link Builder} for {@link Schematic}.
@@ -52,54 +54,51 @@ public record Schematic(short width, short height, short length, Point offset, L
             int y = i / (width * length);
             int z = i % (width * length) / width;
             int x = i % (width * length) % width;
-            int chunkX = (position.blockX() + offset.blockX() + x) >> 4;
-            int chunkZ = (position.blockZ() + offset.blockZ() + z) >> 4;
+            int chunkX = (position.blockX() + origin.blockX() + x) >> 4;
+            int chunkZ = (position.blockZ() + origin.blockZ() + z) >> 4;
             instance.loadOptionalChunk(chunkX, chunkZ).thenRun(() -> batch.setBlock(x, y, z, block));
         }
 
-        batch.apply(instance, position.add(offset), null);
+        batch.apply(instance, position.add(origin), null);
     }
 
     /**
      * A builder for {@link Schematic}.
      */
-    public static class Builder {
-        private short width;
-        private short height;
-        private short length;
-        private Point offset;
+    public static class Builder implements SchematicSink {
+        private int width;
+        private int height;
+        private int length;
+        private Point origin = Pos.ZERO;
         private List<Block> blocks;
 
         private Builder() {
         }
 
-        public Builder width(short width) {
+        @Override
+        public void origin(int x, int y, int z) {
+            this.origin = new Pos(x, y, z);
+        }
+
+        @Override
+        public void size(int width, int height, int length) {
             this.width = width;
-            return this;
-        }
-
-        public Builder height(short height) {
             this.height = height;
-            return this;
-        }
-
-        public Builder length(short length) {
             this.length = length;
-            return this;
         }
 
-        public Builder offset(Point offset) {
-            this.offset = offset;
-            return this;
+        @Override
+        public void block(@NotNull Block block) {
+            // no-op
         }
 
-        public Builder blocks(List<Block> blockData) {
-            this.blocks = blockData;
-            return this;
+        @Override
+        public void blocks(@NotNull List<Block> blocks) {
+            this.blocks = blocks;
         }
 
         public Schematic build() {
-            return new Schematic(width, height, length, offset, blocks);
+            return new Schematic(width, height, length, origin, blocks);
         }
     }
 }

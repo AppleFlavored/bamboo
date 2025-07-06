@@ -8,5 +8,5 @@ repositories {
 
 dependencies {
     implementation(project(":"))
-    implementation("net.minestom:minestom-snapshots:698af959c8")
+    implementation("net.minestom:minestom:2025.07.04-1.21.5")
 }

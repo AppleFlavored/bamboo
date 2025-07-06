@@ -1,6 +1,7 @@
 package com.example;
 
 import dev.flavored.bamboo.Schematic;
+import dev.flavored.bamboo.SchematicFormatException;
 import dev.flavored.bamboo.SchematicReader;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -13,7 +14,7 @@ import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
-import net.minestom.server.registry.DynamicRegistry;
+import net.minestom.server.registry.RegistryKey;
 import net.minestom.server.world.DimensionType;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class TestServer {
         DimensionType fullBright = DimensionType.builder()
                 .ambientLight(2.0f)
                 .build();
-        DynamicRegistry.Key<DimensionType> dimensionKey = MinecraftServer.getDimensionTypeRegistry().register("test:full_bright", fullBright);
+        RegistryKey<DimensionType> dimensionKey = MinecraftServer.getDimensionTypeRegistry().register("test:full_bright", fullBright);
 
         InstanceManager instanceManager = MinecraftServer.getInstanceManager();
         InstanceContainer instance = instanceManager.createInstanceContainer(dimensionKey);
@@ -42,7 +43,7 @@ public class TestServer {
             schematic.paste(instance, Vec.ZERO, true);
             time = System.currentTimeMillis() - start;
             System.out.println("Loaded schematic in " + time + "ms");
-        } catch (IOException e) {
+        } catch (SchematicFormatException | IOException e) {
             throw new RuntimeException(e);
         }
 
