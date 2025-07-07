@@ -8,8 +8,12 @@ Bamboo is a fast and lightweight schematic library for Minestom.
 | Sponge V3 | :x:                | :x:     |
 | MCEdit    | :x:                | :x:     |
 
+- :warning: Partial support, most notably tile/block entities and biomes are not supported.
+
 ## Install
 Bamboo is available on [Maven Central](https://central.sonatype.com/artifact/dev.flavored/bamboo). Replace `<VERSION>` with the latest version.
+
+![Maven Central Version](https://img.shields.io/maven-central/v/dev.flavored/bamboo?style=flat-square)
 
 ```kts
 dependencies {
@@ -20,15 +24,15 @@ dependencies {
 ## Example
 The following example loads a schematic from a file, then pastes it into the `instance` at a given position.
 ```java
-SchematicReader importer = new SchematicReader();
-Schematic schematic = importer.fromPath(new java.nio.Path("example.schematic"));
-schematic.paste(instance, new Pos(0.0, 0.0, 0.0));
-```
+import dev.flavored.bamboo.Schematic;
+import dev.flavored.bamboo.SchematicReader;
 
-Bamboo also supports loading schematics from an NBT compound tag or from an input stream.
-```java
-importer.fromNBT(nbtCompound);
-importer.fromStream(inputStream);
+public static void main(String[] args) {
+    // ... after setting up an instance ...
+    SchematicReader importer = new SchematicReader();
+    Schematic schematic = importer.fromPath(new java.nio.Path("example.schematic"));
+    schematic.paste(instance, new Pos(0.0, 0.0, 0.0));
+}
 ```
 
 ## License
