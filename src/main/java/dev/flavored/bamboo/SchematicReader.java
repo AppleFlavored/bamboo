@@ -53,7 +53,7 @@ public class SchematicReader {
     public @NotNull Schematic fromNBT(@NotNull CompoundBinaryTag root) throws SchematicFormatException {
         Schematic.Builder builder = Schematic.builder();
 
-        // Sponge V3 schematics has a nested "Schematic" root tag.
+        // Sponge V3 schematics have a nested "Schematic" root tag.
         CompoundBinaryTag nestedRoot = root.getCompound("Schematic");
         if (!nestedRoot.isEmpty()) {
             root = nestedRoot;

@@ -23,17 +23,15 @@ public class SpongeV1SchematicReader {
         }
         sink.size(width, height, length);
 
-        int[] min = root.getIntArray("Offset", new int[3]);
-        System.out.println("Offset: " + min[0] + ", " + min[1] + ", " + min[2]);
-
         CompoundBinaryTag metadataCompound = root.getCompound("Metadata");
         if (!metadataCompound.isEmpty()) {
             int weOffsetX = metadataCompound.getInt("WEOffsetX");
             int weOffsetY = metadataCompound.getInt("WEOffsetY");
             int weOffsetZ = metadataCompound.getInt("WEOffsetZ");
-            sink.origin(min[0] - weOffsetX, min[1] - weOffsetY, min[2] - weOffsetZ);
+            sink.offset(weOffsetX, weOffsetY, weOffsetZ);
         } else {
-            sink.origin(min[0], min[1], min[2]);
+            int[] min = root.getIntArray("Offset", new int[3]);
+            sink.offset(min[0], min[1], min[2]);
         }
 
         int paletteMax = root.getInt("PaletteMax");

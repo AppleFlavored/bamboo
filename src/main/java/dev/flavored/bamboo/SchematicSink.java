@@ -13,14 +13,16 @@ import java.util.List;
 public interface SchematicSink {
 
     /**
-     * Sets the origin of the schematic. The origin is the point in the schematic that corresponds to the
-     * @param x The x-coordinate of the origin in the schematic.
-     * @param y The y-coordinate of the origin in the schematic.
-     * @param z The z-coordinate of the origin in the schematic.
+     * Called when the offset of the schematic is known. The {@link SchematicReader} will prefer WorldEdit offsets to the
+     * original offsets, if available.
+     * @param x The x-coordinate of the offset in the schematic.
+     * @param y The y-coordinate of the offset in the schematic.
+     * @param z The z-coordinate of the offset in the schematic.
      */
-    void origin(int x, int y, int z);
+    void offset(int x, int y, int z);
 
     /**
+     * Called when the size of the schematic is known.
      * @param width The width (the size in the x-axis) of the schematic.
      * @param height The height (the size in the y-axis) of the schematic.
      * @param length The length (the size in the z-axis) of the schematic.

@@ -14,10 +14,10 @@ import java.util.List;
  * @param width The width of the schematic.
  * @param height The height of the schematic.
  * @param length The length of the schematic.
- * @param origin The origin of the schematic.
+ * @param offset The offset of the schematic.
  * @param blocks The block data of the schematic.
  */
-public record Schematic(int width, int height, int length, Point origin, List<Block> blocks) {
+public record Schematic(int width, int height, int length, Point offset, List<Block> blocks) {
 
     /**
      * Creates a new {@link Builder} for {@link Schematic}.
@@ -54,12 +54,12 @@ public record Schematic(int width, int height, int length, Point origin, List<Bl
             int y = i / (width * length);
             int z = i % (width * length) / width;
             int x = i % (width * length) % width;
-            int chunkX = (position.blockX() + origin.blockX() + x) >> 4;
-            int chunkZ = (position.blockZ() + origin.blockZ() + z) >> 4;
+            int chunkX = (position.blockX() + offset.blockX() + x) >> 4;
+            int chunkZ = (position.blockZ() + offset.blockZ() + z) >> 4;
             instance.loadOptionalChunk(chunkX, chunkZ).thenRun(() -> batch.setBlock(x, y, z, block));
         }
 
-        batch.apply(instance, position.add(origin), null);
+        batch.apply(instance, position.add(offset), null);
     }
 
     /**
@@ -69,15 +69,15 @@ public record Schematic(int width, int height, int length, Point origin, List<Bl
         private int width;
         private int height;
         private int length;
-        private Point origin = Pos.ZERO;
+        private Point offset = Pos.ZERO;
         private List<Block> blocks;
 
         private Builder() {
         }
 
         @Override
-        public void origin(int x, int y, int z) {
-            this.origin = new Pos(x, y, z);
+        public void offset(int x, int y, int z) {
+            this.offset = new Pos(x, y, z);
         }
 
         @Override
@@ -98,7 +98,7 @@ public record Schematic(int width, int height, int length, Point origin, List<Bl
         }
 
         public Schematic build() {
-            return new Schematic(width, height, length, origin, blocks);
+            return new Schematic(width, height, length, offset, blocks);
         }
     }
 }
