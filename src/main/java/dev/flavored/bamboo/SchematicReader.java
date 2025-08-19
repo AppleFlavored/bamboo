@@ -1,6 +1,7 @@
 package dev.flavored.bamboo;
 
-import dev.flavored.bamboo.format.SpongeV1SchematicReader;
+import dev.flavored.bamboo.format.MCEditSchematicReader;
+import dev.flavored.bamboo.format.SpongeSchematicReader;
 import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * A {@link SchematicReader} reads a Sponge (v1) schematic.
+ * A {@link SchematicReader} reads Sponge (version 1 and 2) schematics.
  */
 public class SchematicReader {
 
@@ -60,13 +61,10 @@ public class SchematicReader {
         }
 
         int version = root.getInt("Version", -1);
-        if (version == 1 || version == 2) {
-            new SpongeV1SchematicReader(builder).read(root);
-        } else if (version == 3) {
-            // TODO: Handle Sponge schematic V3
-            throw new SchematicFormatException("Unsupported Sponge schematic version: " + version);
+        if (version > 0) {
+            new SpongeSchematicReader(builder, version).read(root);
         } else {
-            throw new SchematicFormatException("Unsupported schematic format: " + version);
+            new MCEditSchematicReader(builder).read(root);
         }
 
         return builder.build();

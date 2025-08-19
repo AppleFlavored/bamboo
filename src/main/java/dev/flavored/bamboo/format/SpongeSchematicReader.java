@@ -3,15 +3,21 @@ package dev.flavored.bamboo.format;
 import dev.flavored.bamboo.SchematicFormatException;
 import dev.flavored.bamboo.SchematicSink;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
+import net.kyori.adventure.nbt.ListBinaryTag;
 import net.minestom.server.instance.block.Block;
 
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SpongeV1SchematicReader {
+public final class SpongeSchematicReader {
     private final SchematicSink sink;
+    private final int version;
 
-    public SpongeV1SchematicReader(SchematicSink sink) {
+    public SpongeSchematicReader(SchematicSink sink, int version) {
         this.sink = sink;
+        this.version = version;
     }
 
     public void read(CompoundBinaryTag root) throws SchematicFormatException {
@@ -29,42 +35,47 @@ public class SpongeV1SchematicReader {
             int weOffsetY = metadataCompound.getInt("WEOffsetY");
             int weOffsetZ = metadataCompound.getInt("WEOffsetZ");
             sink.offset(weOffsetX, weOffsetY, weOffsetZ);
+
+            String author = metadataCompound.getString("Author");
+            if (!author.isEmpty()) {
+                sink.author(author);
+            }
+            long date = metadataCompound.getLong("Date", -1);
+            if (date >= 0) {
+                sink.createdAt(Instant.ofEpochMilli(date));
+            }
         } else {
             int[] min = root.getIntArray("Offset", new int[3]);
             sink.offset(min[0], min[1], min[2]);
         }
 
-        int paletteMax = root.getInt("PaletteMax");
-        CompoundBinaryTag palette = root.getCompound("Palette");
-        if (palette.size() != paletteMax) {
-            throw new SchematicFormatException("Palette size does not match expected size");
+        if (version == 3) {
+            CompoundBinaryTag blockContainer = root.getCompound("Blocks");
+            if (blockContainer.isEmpty()) {
+                throw new SchematicFormatException("Schematic is missing non-empty block container");
+            }
+            readBlockData(blockContainer.getCompound("Palette"), blockContainer.getByteArray("Data"));
+            readBlockEntities(blockContainer.getList("BlockEntities"));
+        } else {
+            int paletteMax = root.getInt("PaletteMax");
+            CompoundBinaryTag palette = root.getCompound("Palette");
+            if (palette.size() != paletteMax) {
+                throw new SchematicFormatException("Palette size does not match expected size");
+            }
+            readBlockData(palette, root.getByteArray("BlockData"));
+            readBlockEntities(root.getList(version == 2 ? "BlockEntities" : "TileEntities"));
         }
-
-        readBlockData(palette, root.getByteArray("BlockData"));
     }
 
-    private void readTileEntities(CompoundBinaryTag list) {
+    private void readBlockEntities(ListBinaryTag blockEntityList) {
+        // TODO: Implement reading block entities
     }
 
     private void readBlockData(CompoundBinaryTag palette, byte[] blockData) {
         Map<Integer, Block> indexToBlockMap = new HashMap<>(palette.size());
         for (String key : palette.keySet()) {
-            int propertyListStart = key.indexOf('[');
-            if (propertyListStart < 0) {
-                indexToBlockMap.put(palette.getInt(key), Block.fromKey(key));
-                continue;
-            }
-
-            int propertyListEnd = key.indexOf(']');
-            String[] pairs = key.substring(propertyListStart + 1, propertyListEnd).split(",");
-            Map<String, String> properties = new HashMap<>();
-            for (String pair : pairs) {
-                int equalsIndex = pair.indexOf('=');
-                properties.put(pair.substring(0, equalsIndex), pair.substring(equalsIndex + 1));
-            }
-
-            Block block = Objects.requireNonNull(Block.fromKey(key.substring(0, propertyListStart)));
-            indexToBlockMap.put(palette.getInt(key), block.withProperties(properties));
+            Block block = Block.fromState(key);
+            indexToBlockMap.put(palette.getInt(key), block);
         }
 
         ArrayList<Block> blocks = new ArrayList<>(blockData.length);

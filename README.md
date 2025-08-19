@@ -5,7 +5,7 @@ Bamboo is a fast and lightweight schematic library for Minestom.
 |-----------|--------------------|---------|
 | Sponge V1 | :white_check_mark: | :x:     |
 | Sponge V2 | :warning:          | :x:     |
-| Sponge V3 | :x:                | :x:     |
+| Sponge V3 | :warning:          | :x:     |
 | MCEdit    | :x:                | :x:     |
 
 - :warning: Partial support, most notably tile/block entities and biomes are not supported.
@@ -30,7 +30,7 @@ import dev.flavored.bamboo.SchematicReader;
 public static void main(String[] args) {
     // ... after setting up an instance ...
     SchematicReader importer = new SchematicReader();
-    Schematic schematic = importer.fromPath(new java.nio.Path("example.schematic"));
+    Schematic schematic = importer.fromPath(new java.nio.Path("example.schem"));
     schematic.paste(instance, new Pos(0.0, 0.0, 0.0));
 }
 ```
