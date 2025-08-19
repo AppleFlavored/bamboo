@@ -106,11 +106,6 @@ public record Schematic(
         }
 
         @Override
-        public void block(@NotNull Block block) {
-            // no-op
-        }
-
-        @Override
         public void blocks(@NotNull List<Block> blocks) {
             this.blocks = blocks;
         }

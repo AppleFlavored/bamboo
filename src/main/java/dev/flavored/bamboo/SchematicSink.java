@@ -37,7 +37,7 @@ public interface SchematicSink {
      * Called after each block has been read from the schematic.
      * @param block The block that has been read from the schematic.
      */
-    void block(@NonNull Block block);
+    default void block(@NonNull Block block) {}
 
     /**
      * Called after the block data has been completely read from the schematic.
