@@ -30,12 +30,18 @@ public final class SpongeSchematicReader {
         sink.size(width, height, length);
 
         CompoundBinaryTag metadata = root.getCompound("Metadata");
-        if (!metadata.isEmpty()) {
+
+        int[] offset = root.getIntArray("Offset", new int[3]);
+        if (version < 3 && metadata.keySet().contains("WEOffsetX")) {
             int weOffsetX = metadata.getInt("WEOffsetX");
             int weOffsetY = metadata.getInt("WEOffsetY");
             int weOffsetZ = metadata.getInt("WEOffsetZ");
             sink.offset(weOffsetX, weOffsetY, weOffsetZ);
+        } else {
+            sink.offset(offset[0], offset[1], offset[2]);
+        }
 
+        if (!metadata.isEmpty()) {
             String name = metadata.getString("Name");
             if (!name.isEmpty()) {
                 sink.name(name);
@@ -48,9 +54,6 @@ public final class SpongeSchematicReader {
             if (date >= 0) {
                 sink.createdAt(Instant.ofEpochMilli(date));
             }
-        } else {
-            int[] min = root.getIntArray("Offset", new int[3]);
-            sink.offset(min[0], min[1], min[2]);
         }
 
         if (version == 3) {
