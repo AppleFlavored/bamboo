@@ -1,9 +1,13 @@
 package dev.flavored.bamboo;
 
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.minestom.server.instance.block.Block;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a sink for data read from a schematic file. This interface can be used to receive information about the
@@ -31,7 +35,6 @@ public interface SchematicSink {
 
     /**
      * Called after each block has been read from the schematic.
-     *
      * @param block The block that has been read from the schematic.
      */
     void block(@NonNull Block block);
@@ -41,4 +44,28 @@ public interface SchematicSink {
      * @param blocks The list of blocks in the schematic.
      */
     void blocks(@NonNull List<Block> blocks);
+
+    /**
+     * Called when the block entities in the schematic have been read.
+     */
+    void blockEntities(@NonNull Map<Integer, CompoundBinaryTag> blockEntities);
+
+    /**
+     * Called when the schematic name is known. This will only be called if the schematic format has a name field.
+     * @param name The name of the schematic.
+     */
+    default void name(@NotNull String name) {}
+
+    /**
+     * Called when the schematic author is known. This will only be called if the schematic format has an author field.
+     * @param author The author of the schematic.
+     */
+    default void author(@NonNull String author) {}
+
+    /**
+     * Called when the date the schematic was created is known. This will only be called if the schematic format has a
+     * creation date field.
+     * @param createdAt The date and time when the schematic was created.
+     */
+    default void createdAt(@NotNull Instant createdAt) {}
 }

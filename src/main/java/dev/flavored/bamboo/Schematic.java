@@ -1,13 +1,17 @@
 package dev.flavored.bamboo;
 
+import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.batch.RelativeBlockBatch;
 import net.minestom.server.instance.block.Block;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a schematic.
@@ -17,7 +21,17 @@ import java.util.List;
  * @param offset The offset of the schematic.
  * @param blocks The block data of the schematic.
  */
-public record Schematic(int width, int height, int length, Point offset, List<Block> blocks) {
+public record Schematic(
+        int width,
+        int height,
+        int length,
+        Point offset,
+        List<Block> blocks,
+        Map<Integer, CompoundBinaryTag> blockEntities,
+        String name,
+        String author,
+        Instant createdAt
+) {
 
     /**
      * Creates a new {@link Builder} for {@link Schematic}.
@@ -71,6 +85,10 @@ public record Schematic(int width, int height, int length, Point offset, List<Bl
         private int length;
         private Point offset = Pos.ZERO;
         private List<Block> blocks;
+        private Map<Integer, CompoundBinaryTag> blockEntities = Map.of();
+        private String name = null;
+        private String author = null;
+        private Instant createdAt = Instant.EPOCH;
 
         private Builder() {
         }
@@ -97,8 +115,28 @@ public record Schematic(int width, int height, int length, Point offset, List<Bl
             this.blocks = blocks;
         }
 
+        @Override
+        public void blockEntities(@NonNull Map<Integer, CompoundBinaryTag> blockEntities) {
+            this.blockEntities = blockEntities;
+        }
+
+        @Override
+        public void name(@NotNull String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void author(@NonNull String author) {
+            this.author = author;
+        }
+
+        @Override
+        public void createdAt(@NotNull Instant createdAt) {
+            this.createdAt = createdAt;
+        }
+
         public Schematic build() {
-            return new Schematic(width, height, length, offset, blocks);
+            return new Schematic(width, height, length, offset, blocks, blockEntities, name, author, createdAt);
         }
     }
 }
