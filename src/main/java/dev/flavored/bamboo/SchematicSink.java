@@ -47,6 +47,7 @@ public interface SchematicSink {
 
     /**
      * Called when the block entities in the schematic have been read.
+     * @param blockEntities A map of block indices to their corresponding NBT data. -- Will change.
      */
     void blockEntities(@NonNull Map<Integer, CompoundBinaryTag> blockEntities);
 

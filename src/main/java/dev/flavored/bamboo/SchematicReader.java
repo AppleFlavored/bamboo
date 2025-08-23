@@ -39,6 +39,7 @@ public class SchematicReader {
      * @param stream The input stream.
      * @return The schematic.
      * @throws SchematicFormatException If the schematic is invalid.
+     * @throws IOException If an I/O error occurs while reading the stream.
      */
     public @NotNull Schematic fromStream(@NotNull InputStream stream) throws SchematicFormatException, IOException {
         CompoundBinaryTag root = BinaryTagIO.unlimitedReader().read(stream, BinaryTagIO.Compression.GZIP);
