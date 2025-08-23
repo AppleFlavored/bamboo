@@ -64,7 +64,6 @@ public record Schematic(
             if (ignoreAir && block.isAir()) {
                 continue;
             }
-
             int y = i / (width * length);
             int z = i % (width * length) / width;
             int x = i % (width * length) % width;
@@ -74,6 +73,19 @@ public record Schematic(
         }
 
         batch.apply(instance, position.add(offset), null);
+    }
+
+    public void paste(Block.Setter setter, Point position, boolean ignoreAir) {
+        for (int i = 0; i < blocks.size(); i++) {
+            final Block block = blocks.get(i);
+            if (ignoreAir && block.isAir()) {
+                continue;
+            }
+            int y = i / (width * length);
+            int z = i % (width * length) / width;
+            int x = i % (width * length) % width;
+            setter.setBlock(position.add(x, y, z), block);
+        }
     }
 
     /**
