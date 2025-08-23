@@ -2,7 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    id("com.gradleup.nmcp.aggregation") version("1.1.0")
 }
 
 group = "dev.flavored"
@@ -13,7 +13,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.minestom:minestom:2025.07.04-1.21.5")
+    compileOnly("net.minestom:minestom:2025.08.18-1.21.8")
+
+    nmcpAggregation(rootProject)
 }
 
 java {
@@ -56,18 +58,11 @@ publishing {
     }
 }
 
-nexusPublishing {
-    useStaging = true
-    packageGroup = "dev.flavored"
-
-    repositories.sonatype {
-        nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-        snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-
-        if (System.getenv("SONATYPE_USERNAME") != null) {
-            username.set(System.getenv("SONATYPE_USERNAME"))
-            password.set(System.getenv("SONATYPE_PASSWORD"))
-        }
+nmcpAggregation {
+    centralPortal {
+        username = System.getenv("SONATYPE_USERNAME")
+        password = System.getenv("SONATYPE_PASSWORD")
+        publishingType = "AUTOMATIC"
     }
 }
 
